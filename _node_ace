@@ -1,0 +1,181 @@
+#compdef na
+
+typeset -A opt_args
+
+_node_ace() {
+    local -a basics
+    local -a lucid
+    basics=(
+        "build:Compile typescript code to Javascript."
+        "invoke:Run post install instructions for a given AdonisJS package"
+        "repl:Start a new REPL session"
+        "serve:Start the AdonisJS HTTP server. Optionally watch for file changes"
+        "dump\:rcfile:Dump contents of .adonisrc.json file along with defaults"
+        "generate\:key:Generate a new APP_KEY secret"
+        "list\:routes:List application routes"
+        "make\:command:Make a new ace command"
+        "make\:controller:Make a new HTTP controller"
+        "make\:exception:Make a new exception handle"
+        "make\:listener:Make a new event listener class"
+        "make\:middleware:Make a new middleware"
+        "make\:prldfile:Make a new preload file. Preloaded files are loaded automatically on boot"
+        "make\:provider:Make a new IoC container provider"
+        "make\:validator:Make a new validator"
+        "make\:view:Make a new view template"
+    )
+    lucid=(
+        "db\:seed:Execute database seeder files"
+        "make\:migration:Make a new migration file"
+        "make\:model:Make a new Lucid model"
+        "migration\:rollback:Rollback migrations to a given batch number"
+        "migration\:run:Run pending migrations"
+        "migration\:status:Check migrations current status"
+    )
+
+    _arguments -C \
+        "1: :{_describe 'command' basics -- lucid}" \
+        "*:: :->args"
+
+    case $line[1] in
+        build)
+            _arguments -C \
+                "(-prod, --production)"{-prod,--production}"[Build for production]" \
+                "--client[Select the package manager to decide which lock file to copy to the build folder]" \
+                "(-h, --help)"{-h,--help}"[Show help]" \
+                "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
+            ;;
+        invoke)
+            _arguments -C \
+                "(-h, --help)"{-h,--help}"[Show help]" \
+                "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
+            ;;
+        repl)
+            _arguments -C \
+                "(-h, --help)"{-h,--help}"[Show help]" \
+                "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
+            ;;
+        serve)
+                "(-w, --watch)"{-w,--watch}"[Watch for file changes and re-start the HTTP server]" \
+                "(-p, --poll)"{-p,--poll}"[Detect file changes by polling files instead of listening to filesystem events]" \
+                "--node-args[CLI options to pass to the node command line]"
+                "(-h, --help)"{-h,--help}"[Show help]" \
+                "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
+            ;;
+        dump:rcfile)
+            _arguments -C \
+                "(-h, --help)"{-h,--help}"[Show help]" \
+                "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
+            ;;
+        generate:key)
+            _arguments -C \
+                "(-h, --help)"{-h,--help}"[Show help]" \
+                "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
+            ;;
+        list:routes)
+            _arguments -C \
+                "--json[Output as JSON]" \
+                "(-h, --help)"{-h,--help}"[Show help]" \
+                "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
+            ;;
+        make:controller)
+            _arguments -C \
+                ":name:" \
+                "(-r, --resource)"{-r,--resource}"[Adds resourceful methods to the controller class]" \
+                "(-h, --help)"{-h,--help}"[Show help]" \
+                "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
+            ;;
+        make:exception)
+            _arguments -C \
+                ":name:" \
+                "--self-handle[Add handle method to self handle the exception]" \
+                "(-h, --help)"{-h,--help}"[Show help]" \
+                "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
+            ;;
+        make:listener)
+            _arguments -C \
+                "(-h, --help)"{-h,--help}"[Show help]" \
+                "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
+            ;;
+        make:middleware)
+            _arguments -C \
+                "(-h, --help)"{-h,--help}"[Show help]" \
+                "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
+            ;;
+        make:prldfile)
+            _arguments -C \
+                ":name:" \
+                "--environment[Explicitly define the environment in which you want to load this file]" \
+                "(-h, --help)"{-h,--help}"[Show help]" \
+                "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
+            ;;
+        make:provider)
+            _arguments -C \
+                ":name:" \
+                "--ace[Registers provider under the ace providers array]" \
+                "(-h, --help)"{-h,--help}"[Show help]" \
+                "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
+            ;;
+        make:validator)
+            _arguments -C \
+                "(-h, --help)"{-h,--help}"[Show help]" \
+                "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
+            ;;
+        make:view)
+            _arguments -C \
+                "(-h, --help)"{-h,--help}"[Show help]" \
+                "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
+            ;;
+        # lucid specific commands
+        db:seed)
+            _arguments -C \
+                "(-c, --connection)"{-c,--connection}"[Define a custom database connection for the seeders]" \
+                "(-i, --interactive)"{-i,--interactive}"[Run seeders in interactive mode]" \
+                "(-f, --files)"{-f,--files}"[Define a custom set of seeders files names to run]" \
+                "(-h, --help)"{-h,--help}"[Show help]" \
+                "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
+            ;;
+        make:migration)
+            _arguments -C \
+                ":name:" \
+                "--connection[Define a custom database connection for the migration]" \
+                "--folder[Pre-select a migration directory]" \
+                "--create[Define the table name for creating a new table]" \
+                "--table[Define the table name for altering an existing table]" \
+                "(-h, --help)"{-h,--help}"[Show help]" \
+                "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
+            ;;
+        make:model)
+            _arguments -C \
+                ":name:" \
+                "(-m, --migration)"{-c,--connection}"[Generate the migration for the model]" \
+                "(-c, --controller)"{-i,--interactive}"[Generate the controller for the model]" \
+                "(-h, --help)"{-h,--help}"[Show help]" \
+                "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
+            ;;
+        migration:rollback)
+            _arguments -C \
+                "(-c, --connection)"{-c,--connection}"[Define a custom database connection]" \
+                "--force[Explictly force to run migrations in production]" \
+                "--dry-run[Print SQL queries, instead of running the migrations]" \
+                "--batch[Define custom batch number for rollback. Use 0 to rollback to initial state]" \
+                "(-h, --help)"{-h,--help}"[Show help]" \
+                "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
+            ;;
+        migration:run)
+            _arguments -C \
+                "(-c, --connection)"{-c,--connection}"[Define a custom database connection]" \
+                "--force[Explictly force to run migrations in production]" \
+                "--dry-run[Print SQL queries, instead of running the migrations]"
+                "(-h, --help)"{-h,--help}"[Show help]" \
+                "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
+            ;;
+        migration:status)
+            _arguments -C \
+                "(-c, --connection)"{-c,--connection}"[Define a custom database connection]" \
+                "(-h, --help)"{-h,--help}"[Show help]" \
+                "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
+            ;;
+    esac
+}
+
+_node_ace "$@"
