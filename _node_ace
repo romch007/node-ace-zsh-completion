@@ -77,6 +77,11 @@ _node_ace() {
                 "(-h, --help)"{-h,--help}"[Show help]" \
                 "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
             ;;
+        make:command)
+            _arguments -C \
+                "(-h, --help)"{-h,--help}"[Show help]" \
+                "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
+            ;;
         make:controller)
             _arguments -C \
                 ":name:" \
