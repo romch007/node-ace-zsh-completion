@@ -40,7 +40,7 @@ _node_ace() {
         build)
             _arguments -C \
                 "(-prod, --production)"{-prod,--production}"[Build for production]" \
-                "--client[Select the package manager to decide which lock file to copy to the build folder]" \
+                "--client[Select the package manager to decide which lock file to copy to the build folder]:client:" \
                 "(-h, --help)"{-h,--help}"[Show help]" \
                 "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
             ;;
@@ -57,7 +57,7 @@ _node_ace() {
         serve)
                 "(-w, --watch)"{-w,--watch}"[Watch for file changes and re-start the HTTP server]" \
                 "(-p, --poll)"{-p,--poll}"[Detect file changes by polling files instead of listening to filesystem events]" \
-                "--node-args[CLI options to pass to the node command line]"
+                "--node-args[CLI options to pass to the node command line]:args:"
                 "(-h, --help)"{-h,--help}"[Show help]" \
                 "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
             ;;
@@ -109,7 +109,7 @@ _node_ace() {
         make:prldfile)
             _arguments -C \
                 ":name:" \
-                "--environment[Explicitly define the environment in which you want to load this file]" \
+                "--environment[Explicitly define the environment in which you want to load this file]:env:" \
                 "(-h, --help)"{-h,--help}"[Show help]" \
                 "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
             ;;
@@ -133,19 +133,19 @@ _node_ace() {
         # lucid specific commands
         db:seed)
             _arguments -C \
-                "(-c, --connection)"{-c,--connection}"[Define a custom database connection for the seeders]" \
+                "(-c, --connection)"{-c,--connection}"[Define a custom database connection for the seeders]:conn:" \
                 "(-i, --interactive)"{-i,--interactive}"[Run seeders in interactive mode]" \
-                "(-f, --files)"{-f,--files}"[Define a custom set of seeders files names to run]" \
+                "(-f, --files)"{-f,--files}"[Define a custom set of seeders files names to run]:files:" \
                 "(-h, --help)"{-h,--help}"[Show help]" \
                 "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
             ;;
         make:migration)
             _arguments -C \
                 ":name:" \
-                "--connection[Define a custom database connection for the migration]" \
-                "--folder[Pre-select a migration directory]" \
-                "--create[Define the table name for creating a new table]" \
-                "--table[Define the table name for altering an existing table]" \
+                "--connection[Define a custom database connection for the migration]:conn:" \
+                "--folder[Pre-select a migration directory]:folder:_files" \
+                "--create[Define the table name for creating a new table]:name:" \
+                "--table[Define the table name for altering an existing table]:name:" \
                 "(-h, --help)"{-h,--help}"[Show help]" \
                 "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
             ;;
@@ -159,16 +159,16 @@ _node_ace() {
             ;;
         migration:rollback)
             _arguments -C \
-                "(-c, --connection)"{-c,--connection}"[Define a custom database connection]" \
+                "(-c, --connection)"{-c,--connection}"[Define a custom database connection]:conn:" \
                 "--force[Explictly force to run migrations in production]" \
                 "--dry-run[Print SQL queries, instead of running the migrations]" \
-                "--batch[Define custom batch number for rollback. Use 0 to rollback to initial state]" \
+                "--batch[Define custom batch number for rollback. Use 0 to rollback to initial state]:number:" \
                 "(-h, --help)"{-h,--help}"[Show help]" \
                 "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
             ;;
         migration:run)
             _arguments -C \
-                "(-c, --connection)"{-c,--connection}"[Define a custom database connection]" \
+                "(-c, --connection)"{-c,--connection}"[Define a custom database connection]:conn:" \
                 "--force[Explictly force to run migrations in production]" \
                 "--dry-run[Print SQL queries, instead of running the migrations]"
                 "(-h, --help)"{-h,--help}"[Show help]" \
@@ -176,7 +176,7 @@ _node_ace() {
             ;;
         migration:status)
             _arguments -C \
-                "(-c, --connection)"{-c,--connection}"[Define a custom database connection]" \
+                "(-c, --connection)"{-c,--connection}"[Define a custom database connection]:conn:" \
                 "(-h, --help)"{-h,--help}"[Show help]" \
                 "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
             ;;
