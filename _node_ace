@@ -20,6 +20,10 @@ _node_ace_build_clients() {
     _describe 'client' clients
 }
 
+_node_ace_seeder_files() {
+    _path_files -W "$PWD/database/seeders" -g "*.[tj]s"
+}
+
 _node_ace() {
     local -a basics
     local -a lucid
@@ -159,7 +163,7 @@ _node_ace() {
             _arguments -C \
                 "(-c, --connection)"{-c,--connection}"[Define a custom database connection for the seeders]:conn:_node_ace_db_connections" \
                 "(-i, --interactive)"{-i,--interactive}"[Run seeders in interactive mode]" \
-                "(-f, --files)"{-f,--files}"[Define a custom set of seeders files names to run]:files:_files" \
+                "(-f, --files)"{-f,--files}"[Define a custom set of seeders files names to run]:files:_node_ace_seeder_files" \
                 "(-h, --help)"{-h,--help}"[Show help]" \
                 "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
             ;;
