@@ -55,9 +55,10 @@ _node_ace() {
                 "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
             ;;
         serve)
+            _arguments -C \
                 "(-w, --watch)"{-w,--watch}"[Watch for file changes and re-start the HTTP server]" \
                 "(-p, --poll)"{-p,--poll}"[Detect file changes by polling files instead of listening to filesystem events]" \
-                "--node-args[CLI options to pass to the node command line]:args:"
+                "--node-args[CLI options to pass to the node command line]:args:" \
                 "(-h, --help)"{-h,--help}"[Show help]" \
                 "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
             ;;
