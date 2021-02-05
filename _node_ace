@@ -53,9 +53,12 @@ _node_ace() {
         "migration\:run:Run pending migrations"
         "migration\:status:Check migrations current status"
     )
+    mailer=(
+        "make\:mailer:Make a new mailer class"
+    )
 
     _arguments -C \
-        "1: :{_describe 'command' basics -- lucid}" \
+        "1: :{_describe 'command' basics -- lucid -- mailer}" \
         "*:: :->args"
 
     case $line[1] in
@@ -205,6 +208,13 @@ _node_ace() {
         migration:status)
             _arguments -C \
                 "(-c, --connection)"{-c,--connection}"[Define a custom database connection]:conn:_node_ace_db_connections" \
+                "(-h, --help)"{-h,--help}"[Show help]" \
+                "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
+            ;;
+        # mailer specific commands
+        make:mailer)
+            _arguments -C \
+                ":name:"
                 "(-h, --help)"{-h,--help}"[Show help]" \
                 "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
             ;;
