@@ -2,29 +2,7 @@
 
 typeset -A opt_args
 
-_node_ace_db_connections() {
-    local -a connections
-    connections=(
-        "pg:PostgreSQL"
-        "mysql:MySQL"
-        "oracle:OracleDB"
-        "mssql:MSSQL"
-        "sqlite:SQLite"
-    )
-    _describe 'conn' connections
-}
-
-_node_ace_build_clients() {
-    local -a clients
-    clients=("yarn" "npm")
-    _describe 'client' clients
-}
-
-_node_ace_seeder_files() {
-    _path_files -W "$PWD/database/seeders" -g "*.[tj]s"
-}
-
-_node_ace() {
+_node_ace_commands() {
     local -a basics
     local -a commands
     local -a commands_lines
@@ -48,92 +26,94 @@ _node_ace() {
     
     commands=("${(f)commands_lines}")
 
-    # "(-h, --help)"{-h,--help}"[Show help]" \
-    # "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
+    _describe 'command' basics -- commands
+}
 
-
-    _arguments -C \
-        "1: :{_describe 'command' basics -- commands}" \
-        "*:: :->args"
-
+_node_ace_flags() {
     case $line[1] in
         build)
             _arguments -C \
                 "(-prod, --production)"{-prod,--production}"[Build for production]" \
                 "--client[Select the package manager to decide which lock file to copy to the build folder]:client:_node_ace_build_clients" \
-                "(-h, --help)"{-h,--help}"[Show help]" \
-                "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
-            ;;
-        invoke)
-            _arguments -C \
-                "(-h, --help)"{-h,--help}"[Show help]" \
-                "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
             ;;
         serve)
             _arguments -C \
                 "(-w, --watch)"{-w,--watch}"[Watch for file changes and re-start the HTTP server]" \
                 "(-p, --poll)"{-p,--poll}"[Detect file changes by polling files instead of listening to filesystem events]" \
                 "--node-args[CLI options to pass to the node command line]:args:" \
-                "(-h, --help)"{-h,--help}"[Show help]" \
-                "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
             ;;
         make:command)
             _arguments -C \
                 ":name:" \
-                "(-h, --help)"{-h,--help}"[Show help]" \
-                "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
             ;;
         make:controller)
             _arguments -C \
                 ":name:" \
                 "(-r, --resource)"{-r,--resource}"[Adds resourceful methods to the controller class]" \
-                "(-h, --help)"{-h,--help}"[Show help]" \
-                "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
             ;;
         make:exception)
             _arguments -C \
                 ":name:" \
                 "--self-handle[Add handle method to self handle the exception]" \
-                "(-h, --help)"{-h,--help}"[Show help]" \
-                "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
             ;;
         make:listener)
             _arguments -C \
                 ":name:" \
-                "(-h, --help)"{-h,--help}"[Show help]" \
-                "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
             ;;
         make:middleware)
             _arguments -C \
                 ":name:" \
-                "(-h, --help)"{-h,--help}"[Show help]" \
-                "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
             ;;
         make:prldfile)
             _arguments -C \
                 ":name:" \
                 "--environment[Explicitly define the environment in which you want to load this file]:env:" \
-                "(-h, --help)"{-h,--help}"[Show help]" \
-                "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
             ;;
         make:provider)
             _arguments -C \
                 ":name:" \
                 "--ace[Registers provider under the ace providers array]" \
-                "(-h, --help)"{-h,--help}"[Show help]" \
-                "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
             ;;
         make:validator)
             _arguments -C \
                 ":name:" \
-                "(-h, --help)"{-h,--help}"[Show help]" \
-                "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
             ;;
         make:view)
             _arguments -C \
                 ":name:" \
-                "(-h, --help)"{-h,--help}"[Show help]" \
-                "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
+            ;;
+        *)
+            local args_lines=$(jq -r '.['\"$line[1]\"'].args[] | ":" + .name + ":"' ace-manifest.json)
+            local flags_lines=$(jq -r '.['\"$line[1]\"'].flags[] | "--" + .name + "[" + .description + "]"+ if .type != "boolean" then ":" + .name + ":" else "" end' ace-manifest.json)
+
+            local args=("${(f)args_lines}")
+            local flags=("${(f)flags_lines}")
+
+            local final=($args $flags)
+
+            _arguments -O $final
+        ;;
+    esac
+}
+
+_node_ace() {
+
+    # "(-h, --help)"{-h,--help}"[Show help]" \
+    # "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
+
+
+    _arguments -C \
+        "(-h, --help)"{-h,--help}"[Show help]" \
+        "(-v, --verbose)"{-v,--verbose}"[Verbose output]" \
+        "1:command:->command" \
+        "*::arg:->args"
+
+    case $state in
+        (command)
+            _node_ace_commands
+            ;;
+        (args)
+            _node_ace_flags
             ;;
     esac
 }
