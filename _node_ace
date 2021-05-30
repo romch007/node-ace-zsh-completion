@@ -10,7 +10,9 @@ _node_ace_commands() {
     basics=(
         "build:Compile typescript code to Javascript"
         "invoke:Run post install instructions for a given AdonisJS package"
+        "configure:Run post install instructions for a given AdonisJS package"
         "serve:Start the AdonisJS HTTP server. Optionally watch for file changes"
+        "generate\:manifest:Generate ace commands manifest file. Manifest file speeds up commands lookup"
         "make\:command:Make a new ace command"
         "make\:controller:Make a new HTTP controller"
         "make\:exception:Make a new exception handle"
@@ -22,7 +24,7 @@ _node_ace_commands() {
         "make\:view:Make a new view template"
     )
 
-    commands_lines=$(jq 'keys[] as $k | .[$k].description as $d | ($k + "!" + $d)' ace-manifest.json | sed -e 's/:/\\:/' | sed -e 's/!/:/' | sed -e 's/"//g')
+    commands_lines=$(jq '.commands | keys[] as $k | .[$k].description as $d | ($k + "!" + $d)' ace-manifest.json | sed -e 's/:/\\:/' | sed -e 's/!/:/' | sed -e 's/"//g')
     
     commands=("${(f)commands_lines}")
 
@@ -31,6 +33,20 @@ _node_ace_commands() {
 
 _node_ace_flags() {
     case $line[1] in
+        invoke)
+            _arguments -C \
+                ":name:" \
+        ;;
+        configure)
+            _arguments -C \
+                ":name:" \
+        ;;
+        dump:rcfile)
+        ;;
+        generate:key)
+        ;;
+        generate:manifest)
+        ;;
         build)
             _arguments -C \
                 "(-prod, --production)"{-prod,--production}"[Build for production]" \
@@ -83,8 +99,8 @@ _node_ace_flags() {
                 ":name:" \
             ;;
         *)
-            local args_lines=$(jq -r '.['\"$line[1]\"'].args[] | ":" + .name + ":"' ace-manifest.json)
-            local flags_lines=$(jq -r '.['\"$line[1]\"'].flags[] | "--" + .name + "[" + .description + "]"+ if .type != "boolean" then ":" + .name + ":" else "" end' ace-manifest.json)
+            local args_lines=$(jq -r '.commands | .['\"$line[1]\"'].args[] | ":" + .name + ":"' ace-manifest.json)
+            local flags_lines=$(jq -r '.commands | .['\"$line[1]\"'].flags[] | "--" + .name + "[" + .description + "]"+ if .type != "boolean" then ":" + .name + ":" else "" end' ace-manifest.json)
 
             local args=("${(f)args_lines}")
             local flags=("${(f)flags_lines}")
