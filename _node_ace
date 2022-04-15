@@ -22,6 +22,7 @@ _node_ace_commands() {
         "make\:provider:Make a new IoC container provider"
         "make\:validator:Make a new validator"
         "make\:view:Make a new view template"
+        "make\:test:Make a new test"
     )
 
     commands_lines=$(jq '.commands | keys[] as $k | .[$k].description as $d | ($k + "!" + $d)' ace-manifest.json | sed -e 's/:/\\:/' | sed -e 's/!/:/' | sed -e 's/"//g')
@@ -51,6 +52,12 @@ _node_ace_flags() {
             _arguments -C \
                 "(-prod, --production)"{-prod,--production}"[Build for production]" \
                 "--client[Select the package manager to decide which lock file to copy to the build folder]:client:_node_ace_build_clients" \
+                "--assets[Build frontend assets when webpack encore is installed. Use --no-assets to disable]" \
+                "--no-assets[]" \
+                "--ignore-ts-errors[Ignore typescript errors and complete the build process]" \
+                "--tsconfig[Path to the TypeScript project configuration file]" \
+                "--encore-args[CLI options to pass to the encore command line]" \
+                "--client[Select the package manager to decide which lock file to copy to the build folder]" \
             ;;
         serve)
             _arguments -C \
@@ -97,6 +104,12 @@ _node_ace_flags() {
         make:view)
             _arguments -C \
                 ":name:" \
+            ;;
+        make:test)
+            _arguments -C \
+                ":suite:" \
+                ":name:" \
+                "(-e, --exact)"{-e,--exact}"[Create the test file with the exact name as provided]" \
             ;;
         *)
             local args_lines=$(jq -r '.commands | .['\"$line[1]\"'].args[] | ":" + .name + ":"' ace-manifest.json)
